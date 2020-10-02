@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+id 'maven'
 }
 apply plugin: 'war'
 
@@ -11,7 +12,7 @@ dependencies {
     compileOnly misc.servletApi
 
     testImplementation testing.api, testing.platformRunner, testing.mockito, spring.test, testing.mockito, testing.api,testing.restAssured, testing.restAssuredAll
-    testRuntime testing.engine, testing.platformRunner
+    //testRuntime testing.engine, testing.platformRunner
 }
 
 war {
