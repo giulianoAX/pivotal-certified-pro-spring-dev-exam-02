@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 //@SpringBootApplication
 public class ApplicationOne {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ApplicationOne.class, args);
-    }
+    // public static void main(String[] args) {
+    //     SpringApplication.run(ApplicationOne.class, args);
+    // }
 }

@@ -45,9 +45,9 @@ import static com.apress.cems.BeanManager.asHtml;
 //@SpringBootApplication
 public class ApplicationTwo {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ApplicationTwo.class, args);
-    }
+    // public static void main(String[] args) {
+    //     SpringApplication.run(ApplicationTwo.class, args);
+    // }
 
     //@Autowired
     ApplicationContext ctx;
