@@ -43,9 +43,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-// TODO 11. Modify this test class to use more than one configuration class
+// Modify this test class to use more than one configuration class
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {FullConfig.class})
+@ContextConfiguration(classes = {FullConfig.class, DataSourceConfig.class})
 public class FullConfigTest {
 
     @Autowired
@@ -56,8 +56,8 @@ public class FullConfigTest {
 
     @Test
     public void testInjectedBeans(){
-        //assertNotNull(evidenceRepo);
-        //assertNotNull(detectiveRepo);
+        assertNotNull(evidenceRepo);
+        assertNotNull(detectiveRepo);
     }
 
 }
