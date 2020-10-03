@@ -27,8 +27,12 @@ SOFTWARE.
 */
 package com.apress.cems.scopes;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 /**
  * @author Iuliana Cosmina
@@ -37,4 +41,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan(basePackages = {"com.apress.cems.scopes"} )
 public class AppConfig {
+
+    @Bean
+    // 1) declare a prototype with @Scope
+    // @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.INTERFACES)
+    // 2) declare a prototype with custom annotation
+    @PrototypeScope
+    SalaryPrototype getSalary() {
+        return new Salary();
+    }
 }
