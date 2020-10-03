@@ -39,7 +39,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {"com.apress.cems.fun"} )
 class FunBeanConfig {
 
-    // TODO 13. Add the proper annotation to specify an initialization method and a destroy method
+    // Add the proper annotation to specify an initialization method and a destroy method
+    @Bean(initMethod = "beanInit", destroyMethod = "beanDestroy")
     FunBean funBean(){
         return new FunBean();
     }

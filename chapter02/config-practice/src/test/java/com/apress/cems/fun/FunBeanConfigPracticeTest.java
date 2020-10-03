@@ -27,7 +27,7 @@ SOFTWARE.
 */
 package com.apress.cems.fun;
 
-import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-@Disabled  // comment this annotation to run the test
+//@Disabled  // comment this annotation to run the test
 class FunBeanConfigPracticeTest {
 
     @Test
