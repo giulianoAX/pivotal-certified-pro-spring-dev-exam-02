@@ -79,13 +79,14 @@ public class SimpleCriminalCaseServiceTest {
         service.deleteById(CASE_ID);
 
         // we do a find to test the deletion succeeded
-        assertThrows( NotFoundException.class, () ->
+        assertThrows(NotFoundException.class, () ->
                 service.findById(CASE_ID), "No such case exists");
     }
 
     @Test
      void deleteByIdNegative() {
-        // TODO 15. Analyse the stub implementation and add a test for service.deleteById(99L)
+        
+        assertThrows(NotFoundException.class, () -> service.deleteById(666L));
     }
 
     //positive test, we know that cases for this detective exist and how many
@@ -98,7 +99,9 @@ public class SimpleCriminalCaseServiceTest {
     //negative test, we know that cases for this detective do not exist
     @Test
     public void findByLeadNegative() {
-        // TODO 16. Analyse the stub implementation and add a test for service.findByLeadInvestigator(detective);
+        assertNull(service.findByLeadInvestigator(
+            buildDetective("Dale", "Cooper", Rank.SENIOR, "666")
+        ));
     }
 
     @AfterEach
