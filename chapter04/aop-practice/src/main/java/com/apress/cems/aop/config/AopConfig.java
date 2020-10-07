@@ -29,6 +29,7 @@ package com.apress.cems.aop.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * @author Iuliana Cosmina
@@ -36,6 +37,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {"com.apress.cems.aop", "com.apress.cems.repos"})
-// TODO 19. Enable aspect support
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AopConfig {
 }

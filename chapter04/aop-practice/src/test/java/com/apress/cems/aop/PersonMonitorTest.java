@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-@Disabled  // remove this to test your solution
+//@Disabled  // remove this to test your solution
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {AopConfig.class, TestDbConfig.class})
 class PersonMonitorTest {

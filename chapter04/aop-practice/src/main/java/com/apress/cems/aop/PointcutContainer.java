@@ -27,8 +27,6 @@ SOFTWARE.
 */
 package com.apress.cems.aop;
 
-import com.apress.cems.aop.service.PersonService;
-import com.apress.cems.dao.Person;
 import org.aspectj.lang.annotation.Pointcut;
 
 /**
