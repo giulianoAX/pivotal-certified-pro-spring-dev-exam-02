@@ -6,6 +6,12 @@
   <artifactId>beans</artifactId>
   <version>1.2-SNAPSHOT</version>
 
+  <parent>
+    <groupId>com.apress.cems</groupId>
+    <artifactId>chapter02</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
   <properties>
     <java.version>11</java.version>
     <maven.compiler.source>11</maven.compiler.source>

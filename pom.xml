@@ -27,8 +27,8 @@
 
     <modules>
         <module>chapter00</module>
-        <!-- <module>chapter02</module>
-        <module>chapter03</module>
+        <module>chapter02</module>
+        <!--<module>chapter03</module>
         <module>chapter04</module>
         <module>chapter05</module>
         <module>chapter06</module>
