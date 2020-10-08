@@ -30,6 +30,8 @@ package com.apress.cems.jdbc;
 import com.apress.cems.dao.Person;
 import com.apress.cems.jdbc.config.TestDbConfig;
 import com.apress.cems.repos.PersonRepo;
+import com.apress.cems.repos.util.PersonRowMapper;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
@@ -49,7 +52,7 @@ import java.util.Set;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-@Disabled // delete this line to execute this test class
+//@Disabled // delete this line to execute this test class
 @SpringJUnitConfig(classes = {TestDbConfig.class, JdbcConfig.class})
 class JdbcPersonRepoTest {
 
@@ -60,6 +63,9 @@ class JdbcPersonRepoTest {
     @Autowired
     @Qualifier("extraJdbcPersonRepo")
     PersonRepo personRepo;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp(){
@@ -82,7 +88,14 @@ class JdbcPersonRepoTest {
 
     @Test
     void testFindByIdNegative(){
-        // TODO 26: Use the JdbcTemplate instance to query for a person that does not exist and make this test pass
+        // Use the JdbcTemplate instance to query for a person that does not exist and make this test pass
+        assertThrows(EmptyResultDataAccessException.class, () -> jdbcTemplate
+        .queryForObject("SELECT ID, USERNAME, FIRSTNAME, LASTNAME, PASSWORD, HIRINGDATE FROM PERSON p WHERE p.ID = ?", 
+            new Object[] {999}, 
+                new PersonRowMapper()
+            )
+        );
+        
     }
 
     @Test
@@ -95,7 +108,8 @@ class JdbcPersonRepoTest {
     @Test
     void testFindAll(){
         int result = 0;
-        // TODO 27: Use the JdbcTemplate instance to query for the number of rows in the PERSON table
+        // Use the JdbcTemplate instance to query for the number of rows in the PERSON table
+        result = jdbcTemplate.queryForList("SELECT * FROM PERSON").size();
         assertEquals(2, result);
     }
 
