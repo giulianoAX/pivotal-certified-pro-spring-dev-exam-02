@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateDbConfig.class, AppConfig.class})
-@Disabled
+//@Disabled
  class PersonServiceTest {
 
     @Autowired

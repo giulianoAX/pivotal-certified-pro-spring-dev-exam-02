@@ -51,7 +51,7 @@ import java.util.Properties;
  * @since 1.0
  */
 @Configuration
-@PropertySource({"classpath:db/db.properties"})
+@PropertySource({ "classpath:db/db.properties" })
 public class HibernateDbConfig {
 
     // ---------- configure the db ------------
@@ -67,7 +67,6 @@ public class HibernateDbConfig {
     private String dialect;
     @Value("${db.hbm2ddl}")
     private String hbm2ddl;
-
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -104,18 +103,29 @@ public class HibernateDbConfig {
         }
     }
 
-    // TODO 38. Add a session factory and a transaction manager bean declaration
+    // Add a session factory and a transaction manager bean declaration
 
-    //needed because Hibernate does not drop the database as it should
+    @Bean
+    public SessionFactory sessionFactory() {
+        return new LocalSessionFactoryBuilder(dataSource()).scanPackages("com.apress.cems.dao")
+                .addProperties(hibernateProperties()).buildSessionFactory();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new HibernateTransactionManager(sessionFactory());
+    }
+
+    // needed because Hibernate does not drop the database as it should
     @PostConstruct
-    void discardDatabase(){
+    void discardDatabase() {
         final String currentDir = System.getProperty("user.dir");
-        int start = url.indexOf("./")+ 2;
+        int start = url.indexOf("./") + 2;
         int end = url.indexOf(";", start);
         String dbName = url.substring(start, end);
-        File one  = new File(currentDir.concat(File.separator).concat(dbName).concat(".mv.db"));
+        File one = new File(currentDir.concat(File.separator).concat(dbName).concat(".mv.db"));
         one.deleteOnExit();
-        File two  = new File(currentDir.concat(File.separator).concat(dbName).concat(".trace.db"));
+        File two = new File(currentDir.concat(File.separator).concat(dbName).concat(".trace.db"));
         two.deleteOnExit();
     }
 }
