@@ -42,14 +42,19 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
+
 import java.io.File;
 import java.util.Properties;
 
@@ -58,6 +63,7 @@ import java.util.Properties;
  * @since 1.0
  */
 @Configuration
+@EnableTransactionManagement
 @PropertySource({"classpath:db/db.properties"})
 public class JpaDbConfig {
 
@@ -111,7 +117,24 @@ public class JpaDbConfig {
         }
     }
 
-    // TODO 39. Declare and configure the entity manager factory and the transaction manager beans.
+    // Declare and configure the entity manager factory and the transaction manager beans.
+    @Bean
+    public EntityManagerFactory entityManagerFactory() {
+        
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setDataSource(dataSource());
+        factoryBean.setPackagesToScan("com.apress.cems.dao");
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+        factoryBean.setJpaProperties(hibernateProperties());
+        factoryBean.afterPropertiesSet();
+        return factoryBean.getNativeEntityManagerFactory();
+    }  
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager(entityManagerFactory());
+    }
 
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
