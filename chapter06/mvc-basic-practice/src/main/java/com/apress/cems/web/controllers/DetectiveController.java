@@ -30,12 +30,14 @@ package com.apress.cems.web.controllers;
 import com.apress.cems.dj.services.DetectiveService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 
 /**
  * @author Iuliana Cosmina
  * @since 1.0
  */
 // TODO 48. complete the configuration and implementation of this class so that the Detectives part of the application works too.
+@Controller
 public class DetectiveController {
 
     private Logger logger = LoggerFactory.getLogger(DetectiveController.class);

@@ -32,6 +32,7 @@ import com.apress.cems.dj.services.PersonService;
 import com.apress.cems.web.problem.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +45,9 @@ import static com.apress.cems.util.Functions.COMPARATOR_BY_ID;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-// TODO 45. Provide the proper configuration to transform this class into a Spring Controller that can handle requests to https://localhost:8080/mvc-basic-practice/persons/*
+// Provide the proper configuration to transform this class into a Spring Controller that can handle requests to https://localhost:8080/mvc-basic-practice/persons/*
+@Controller
+@RequestMapping("/mvc-basic-practice/persons")
 public class PersonController {
 
     private Logger logger = LoggerFactory.getLogger(PersonController.class);
@@ -58,7 +61,8 @@ public class PersonController {
     /**
      * Handles requests to list all persons.
      */
-    // TODO 46. Provide the proper to handle GET requests to https://localhost:8080/mvc-basic-practice/persons/list
+    //Provide the proper to handle GET requests to https://localhost:8080/mvc-basic-practice/persons/list
+    @GetMapping("/list")
     public String list(Model model) {
         logger.info("Populating model with list...");
         List<Person> persons =  personService.findAll();
@@ -70,7 +74,8 @@ public class PersonController {
     /**
      * Handles requests to show detail about one person.
      */
-    // TODO 47. Provide the proper to handle GET requests to https://localhost:8080/mvc-basic-practice/persons/show?id=[number]
+    // Provide the proper to handle GET requests to https://localhost:8080/mvc-basic-practice/persons/show?id=[number]
+    @GetMapping("/show")
     public String show(@RequestParam("id") Long id, Model model) throws NotFoundException {
         Optional<Person> personOpt = personService.findById(id);
        if(personOpt.isPresent()) {

@@ -48,14 +48,16 @@ import java.util.Locale;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-// TODO 43. Add the proper annotation to enable Spring @MVC
-@ComponentScan(basePackages = {"com.apress.cems.web.controllers"})
+// Add the proper annotation to enable Spring @MVC
+@EnableWebMvc
+@ComponentScan(basePackages = { "com.apress.cems.web.controllers" })
 class WebConfig implements WebMvcConfigurer {
 
     @Bean
-    ViewResolver viewResolver(){
-        InternalResourceViewResolver resolver = null;
-        // TODO 44. Complete the definition for a bean of type InternalResourceViewResolver that will map the requests to views
+    ViewResolver viewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver("/WEB-INF/", ".jsp");
+        // Complete the definition for a bean of type InternalResourceViewResolver that
+        // will map the requests to views
         // under '/WEB-INF/' with extension '.jsp'
         return resolver;
     }
@@ -78,7 +80,8 @@ class WebConfig implements WebMvcConfigurer {
         return validator();
     }
 
-    //Declare our static resources. I added cache to the java config but it?s not required.
+    // Declare our static resources. I added cache to the java config but it's not
+    // required.
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**").addResourceLocations("/images/").setCachePeriod(31556926);
@@ -87,8 +90,10 @@ class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-/*        registry.addViewController("/").setViewName("home");
-        registry.addViewController("/home").setViewName("home");*/
+        /*
+         * registry.addViewController("/").setViewName("home");
+         * registry.addViewController("/home").setViewName("home");
+         */
         registry.addRedirectViewController("/", "/home");
     }
 
@@ -107,6 +112,7 @@ class WebConfig implements WebMvcConfigurer {
         messageSource.setCacheSeconds(1);
         return messageSource;
     }
+
     @Bean
     LocaleChangeInterceptor localeChangeInterceptor() {
         return new LocaleChangeInterceptor();
