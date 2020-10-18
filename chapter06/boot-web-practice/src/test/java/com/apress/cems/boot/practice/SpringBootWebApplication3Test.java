@@ -65,11 +65,31 @@ class SpringBootWebApplication3Test {
 
     @Test
     void testShow() throws Exception {
-        // TODO 50. Write a test to check that checks that requesting "/persons/1" generates the appropriate response
+        // Write a test to check that checks that requesting "/persons/1" generates the appropriate response
+        String responseStr = given().baseUri("http://localhost")
+                .port(port).when().get("/persons/1")
+                .then()
+                .assertThat().statusCode(HttpStatus.OK.value())
+                .extract().body().asString();
+
+        assertAll(
+                () -> assertTrue(responseStr.contains("sherlock.holmes")),
+                () -> assertTrue(responseStr.contains("Employed since"))
+        );
     }
 
     @Test
     void testError() throws Exception {
-        // TODO 51. Write a test to check that checks that requesting "/persons/99" generates the appropriate response
+        // Write a test to check that checks that requesting "/persons/99" generates the appropriate response
+        String responseStr = given().baseUri("http://localhost")
+                .port(port).when().get("/persons/99")
+                .then()
+                .assertThat().statusCode(HttpStatus.NOT_FOUND.value())
+                .extract().body().asString();
+
+        assertAll(
+                () -> assertTrue(responseStr.contains("Unexpected error")),
+                () -> assertTrue(responseStr.contains("Person with id: 99 does not exist!"))
+        );
     }
 }
