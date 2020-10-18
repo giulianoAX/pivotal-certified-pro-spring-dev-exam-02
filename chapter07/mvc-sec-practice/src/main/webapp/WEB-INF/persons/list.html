@@ -29,8 +29,8 @@ Time: 11:43
                 </thead>
                 <th:block th:each="person : ${persons}">
                     <tr>
-                        <td>
-                            <!-- TODO 55. Display this link only to administrators -->
+                        <td sec:authorize access="hasRole('ROLE_ADMIN')">
+                            <!-- Display this link only to administrators -->
                             <a th:href="@{/persons/} + ${person.id}" th:text="${person.id}">ID</a>
                         </td>
                         <td th:text="${person.username}">...</td>

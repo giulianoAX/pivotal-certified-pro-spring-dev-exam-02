@@ -40,7 +40,7 @@ import javax.servlet.ServletRegistration;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-//TODO 54. Complete this class to secure the application using Spring Security
+//Complete this class to secure the application using Spring Security
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
@@ -50,7 +50,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{};
+        return new Class[]{H2DbConfig.class, WebConfig.class, SecurityConfig.class};
     }
 
     @Override

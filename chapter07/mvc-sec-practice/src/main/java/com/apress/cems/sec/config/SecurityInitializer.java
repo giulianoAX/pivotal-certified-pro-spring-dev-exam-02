@@ -27,12 +27,14 @@ SOFTWARE.
 */
 package com.apress.cems.sec.config;
 
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+
 /**
  * @author Iuliana Cosmina
  * @since 1.0
  */
-// TODO 52. Complete the implementation of this class in order
+// Complete the implementation of this class in order
 //    to add a new filter of type org.springframework.web.filter.DelegatingFilterProxy
-class SecurityInitializer {
-
+class SecurityInitializer extends AbstractSecurityWebApplicationInitializer {
+    // Empty class which registers the springSecurityFilterChain bean
 }
