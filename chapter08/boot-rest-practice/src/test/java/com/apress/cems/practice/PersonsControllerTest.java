@@ -39,16 +39,18 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Iuliana Cosmina
- * @since 1.0
- * Observation: tests are ordered because they are run on the same database and create and delete operations might affect the result of other tests
+ * @since 1.0 Observation: tests are ordered because they are run on the same
+ *        database and create and delete operations might affect the result of
+ *        other tests
  */
-@Disabled
+// @Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = PracticeRestApplication.class)
 class PersonsControllerTest {
@@ -71,61 +73,49 @@ class PersonsControllerTest {
     }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         baseUrl = baseUrl.concat(":").concat(port.toString()).concat("/persons");
     }
 
     @Order(1)
     @Test
-    void shouldReturnAListOfPersons(){
+    void shouldReturnAListOfPersons() {
         Person[] persons = restTemplate.getForObject(baseUrl, Person[].class);
-        assertAll(
-                () -> assertNotNull(persons),
-                () -> assertTrue(persons.length == 4)
-        );
+        assertAll(() -> assertNotNull(persons), () -> assertTrue(persons.length == 4));
     }
 
     @Order(2)
     @Test
-    void shouldReturnAPerson(){
-        //TODO. 61 Use the proper RestTemplate method to retrieve the person with id = 1
-        Person person = null;
-        assertAll(
-                () -> assertNotNull(person),
-                () -> assertEquals("sherlock.holmes", person.getUsername())
-        );
+    void shouldReturnAPerson() {
+        // Use the proper RestTemplate method to retrieve the person with id = 1
+        Person person = restTemplate.getForEntity(baseUrl.concat("/{id}"), Person.class, Map.of("id", 1L)).getBody();
+        assertAll(() -> assertNotNull(person), () -> assertEquals("sherlock.holmes", person.getUsername()));
     }
 
     @Order(3)
     @Test
-    void shouldReturn404(){
+    void shouldReturn404() {
         ResponseEntity<String> err = restTemplate.getForEntity(baseUrl + "/99", String.class);
-        assertAll(
-                () -> assertNotNull(err),
-                () -> assertEquals(HttpStatus.NOT_FOUND, err.getStatusCode()),
-                () -> assertTrue(err.getBody().contains("Unable to find entry with id 99"))
-        );
+        assertAll(() -> assertNotNull(err), () -> assertEquals(HttpStatus.NOT_FOUND, err.getStatusCode()),
+                () -> assertTrue(err.getBody().contains("Unable to find entry with id 99")));
     }
 
     @Order(4)
     @Test
-    void shouldReturnAPersonWithCallback(){
+    void shouldReturnAPersonWithCallback() {
         String url = baseUrl + "/{id}"; // http://localhost:8081/persons/1
-        Person person  = restTemplate.execute(url, HttpMethod.GET,
-                request -> {
-                    HttpHeaders headers = request.getHeaders();
-                    headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-                    System.out.println("Request headers = " + headers);
-                }, new HttpMessageConverterExtractor<>(Person.class,
-                        restTemplate.getMessageConverters())
-                , new HashMap<String, Long>() {{
-                    put("id", 1L);
-                }});
+        Person person = restTemplate.execute(url, HttpMethod.GET, request -> {
+            HttpHeaders headers = request.getHeaders();
+            headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+            System.out.println("Request headers = " + headers);
+        }, new HttpMessageConverterExtractor<>(Person.class, restTemplate.getMessageConverters()),
+                new HashMap<String, Long>() {
+                    {
+                        put("id", 1L);
+                    }
+                });
 
-        assertAll(
-                () -> assertNotNull(person),
-                () -> assertEquals("sherlock.holmes", person.getUsername())
-        );
+        assertAll(() -> assertNotNull(person), () -> assertEquals("sherlock.holmes", person.getUsername()));
     }
 
     @Order(5)
@@ -133,8 +123,14 @@ class PersonsControllerTest {
     void shouldUpdateAPerson() {
         Person person = buildPerson("sherlock.holmes", "Sherlock Cornelius", "Holmes", "complicated");
 
-        //TODO. 60 Use the proper RestTemplate method to update the person provided as request body
-        ResponseEntity<Person> responseEntity = null;
+        // Use the proper RestTemplate method to update the person provided as request
+        // body
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        final HttpEntity<Person> putRequest = new HttpEntity<>(person, headers);
+        ResponseEntity<Person> responseEntity = restTemplate.exchange(baseUrl.concat("/{id}"), HttpMethod.PUT,
+                putRequest, Person.class, Map.of("id", 1L));
 
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
     }
@@ -142,53 +138,52 @@ class PersonsControllerTest {
     @Order(6)
     @Test
     void shouldCreateAPerson() {
-        Person person = buildPerson("gigi.pedala", "Gigi", "Pedala", "1dooh2" );
+        Person person = buildPerson("gigi.pedala", "Gigi", "Pedala", "1dooh2");
 
-        //TODO 58. Use the proper RestTemplate method to save the person resource created previously
-        URI uri = null;
+        // Use the proper RestTemplate method to save the person resource created
+        // previously
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        final HttpEntity<Person> postRequest = new HttpEntity<>(person, headers);
+        URI uri = restTemplate.postForLocation(baseUrl, postRequest);
 
         assertNotNull(uri);
         Person newPerson = restTemplate.getForObject(uri, Person.class);
-        assertAll(
-                () -> assertNotNull(newPerson),
-                () -> assertEquals(person.getUsername(), newPerson.getUsername()),
-                () -> assertNotNull(newPerson.getId())
-        );
+        assertAll(() -> assertNotNull(newPerson), () -> assertEquals(person.getUsername(), newPerson.getUsername()),
+                () -> assertNotNull(newPerson.getId()));
     }
 
     @Order(8)
     @SuppressWarnings("unchecked")
     @Test
     void shouldNotCreateAPerson() {
-        Person person = buildPerson("titi.pedala", "ti", "Pe", "1dooh2" );
+        Person person = buildPerson("titi.pedala", "ti", "Pe", "1dooh2");
 
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         final HttpEntity<Person> postRequest = new HttpEntity<>(person, headers);
-        ResponseEntity<String> err = restTemplate.exchange(baseUrl, HttpMethod.POST, postRequest,  String.class);
-        assertAll(
-                () -> assertNotNull(err),
-                () -> assertEquals(HttpStatus.BAD_REQUEST, err.getStatusCode()),
+        ResponseEntity<String> err = restTemplate.exchange(baseUrl, HttpMethod.POST, postRequest, String.class);
+        assertAll(() -> assertNotNull(err), () -> assertEquals(HttpStatus.BAD_REQUEST, err.getStatusCode()),
                 () -> assertTrue(err.getBody().contains("firstName")),
-                () -> assertTrue(err.getBody().contains("lastName"))
-        );
+                () -> assertTrue(err.getBody().contains("lastName")));
     }
 
     @Order(9)
     @Test
-    void shouldDeleteAPerson(){
-        //TODO. 62 Use the proper RestTemplate method to delete the person with id = 1
+    void shouldDeleteAPerson() {
+        // Use the proper RestTemplate method to delete the person with id = 1
+
+        restTemplate.delete(baseUrl.concat("/1"));
 
         ResponseEntity<String> err = restTemplate.getForEntity(baseUrl + "/1", String.class);
-        assertAll(
-                () -> assertNotNull(err),
-                () -> assertEquals(HttpStatus.NOT_FOUND, err.getStatusCode()),
-                () -> assertTrue(err.getBody().contains("Unable to find entry with id 1"))
-        );
+        assertAll(() -> assertNotNull(err), () -> assertEquals(HttpStatus.NOT_FOUND, err.getStatusCode()),
+                () -> assertTrue(err.getBody().contains("Unable to find entry with id 1")));
     }
 
-    private Person buildPerson(final String username, final String firstName, final String lastName, final String password) {
+    private Person buildPerson(final String username, final String firstName, final String lastName,
+            final String password) {
         Person person = new Person();
         person.setUsername(username);
         person.setFirstName(firstName);

@@ -34,6 +34,7 @@ import com.apress.cems.practice.util.NumberGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -51,7 +52,9 @@ import java.util.Optional;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-// TODO 56. Place proper annotation here, to make this class handle REST requests with the root URI of '/persons'
+// Place proper annotation here, to make this class handle REST requests with the root URI of '/persons'
+@Controller
+@RequestMapping("/persons")
 public class PersonsController {
     private PersonService personService;
     static Comparator<Person> COMPARATOR_BY_ID = Comparator.comparing(Person::getId);
@@ -74,9 +77,11 @@ public class PersonsController {
     /**
      * Handles requests to create a person.
      */
-    //TODO 57. Place proper annotations to handle a REST POST request
-    public void create(@Validated(Person.BasicValidation.class) @RequestBody Person person, BindingResult result, @Value("#{request.requestURL}")
-            StringBuffer originalUrl, HttpServletResponse response) {
+    //Place proper annotations to handle a REST POST request
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void create(@Validated(Person.BasicValidation.class) @RequestBody Person person, 
+        BindingResult result, @Value("#{request.requestURL}") StringBuffer originalUrl, HttpServletResponse response) {
         if (result.hasErrors()) {
             String errString = createErrorString(result);
             throw new PersonsException(HttpStatus.BAD_REQUEST, "Cannot save entry because: "+ errString);
@@ -149,7 +154,9 @@ public class PersonsController {
      * @param id
      * @return
      */
-    // TODO 59. Place proper annotations to handle a REST POST request
+    // Place proper annotations to handle a REST PUT request
+    @PutMapping(path = "/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Person updatedPerson, @PathVariable Long id) {
         Optional<Person> personOpt = personService.findById(id);
         if(personOpt.isPresent()) {
