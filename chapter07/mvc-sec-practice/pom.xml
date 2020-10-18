@@ -6,7 +6,29 @@
   <artifactId>mvc-sec-practice</artifactId>
   <version>1.2-SNAPSHOT</version>
   <packaging>war</packaging>
+
+  <properties>
+    <java.version>11</java.version>
+    <maven.compiler.source>11</maven.compiler.source>
+   <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
   <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>  
     <dependency>
       <groupId>com.apress.cems</groupId>
       <artifactId>dao</artifactId>
